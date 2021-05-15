@@ -99,5 +99,14 @@ public class EmployeePayRollServiceTest {
         Assertions.assertEquals(4,employeePayrollData.size());
     }
 
+  //UC6
+    @Test
+    public void givenpayRollData_WhenAVGSalaryRetriveByGender_ShouldReturnProperValue(){
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+        employeePayrollService.readEmployeePayRollData1(EmployeePayrollService.IOService.DB_IO);
+        Map<String,Double> avgSalaryByGender = employeePayrollService.readAvgSalaryByGender(EmployeePayrollService.IOService.DB_IO);
+        Assertions.assertTrue(avgSalaryByGender.get("M").equals(2000000.00) &&
+                                avgSalaryByGender.get("F").equals(3000000.00));
 
+    }
 }

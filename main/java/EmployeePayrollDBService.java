@@ -1,9 +1,7 @@
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.Executor;
 
 public class EmployeePayrollDBService {
@@ -110,5 +108,23 @@ public class EmployeePayrollDBService {
             e.printStackTrace();
         }
         return employeePayrollList;
+    }
+
+    public Map<String, Double> getAverageSalaryByGender() {
+        String sql = "SELECT gender, AVg(basic_pay) as avg_salary FROM employee_payroll GROUP BY gender;";
+        Map<String,Double> genderAvgSalaryMap = new HashMap<>();
+        try(Connection connection = this.getConnection()){
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()){
+                String gender = resultSet.getString("gender");
+                Double salary = resultSet.getDouble("basic_pay");
+                genderAvgSalaryMap.put(gender,salary);
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return genderAvgSalaryMap;
     }
 }

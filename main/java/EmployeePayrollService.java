@@ -3,9 +3,11 @@ import jdk.dynalink.linker.LinkerServices;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class EmployeePayrollService {
+
 
     public enum IOService{CONSOLE_IO,FILE_IO,DB_IO,REST_IO}
 
@@ -72,6 +74,13 @@ public class EmployeePayrollService {
             return employeePayrollDBService.getEmployeePayrollForDateRange(startDate,endDate);
         return null;
     }
+
+    public Map<String, Double> readAvgSalaryByGender(IOService ioService) {
+        if(ioService.equals(IOService.DB_IO))
+            return employeePayrollDBService.getAverageSalaryByGender();
+        return null;
+    }
+
 
 
     public boolean checkEmployeepayrollInSyncWithDB(String name) {
