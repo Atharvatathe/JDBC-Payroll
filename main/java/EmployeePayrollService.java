@@ -5,11 +5,14 @@ import java.util.List;
 import java.util.Scanner;
 
 public class EmployeePayrollService {
-
     public enum IOService{CONSOLE_IO,FILE_IO,DB_IO,REST_IO}
-    private List<EmployeePayrollData> employeePayrollList;
 
-    public EmployeePayrollService(){}
+    private List<EmployeePayrollData> employeePayrollList;
+    private EmployeePayrollDBService employeePayrollDBService;
+
+    public EmployeePayrollService(){
+        employeePayrollDBService = EmployeePayrollDBService.getInstance();
+    }
 
     public EmployeePayrollService(List<EmployeePayrollData>employeePayrollList){
         this.employeePayrollList = employeePayrollList;
@@ -48,10 +51,37 @@ public class EmployeePayrollService {
             new EmployeePayrollFileIOService().writeData(employeePayrollList);
 
     }
-    public void printData(IOService ioService) {
+
+    public List<EmployeePayrollData> readEmployeePayRollData1(IOService ioService){
+        if(ioService.equals(IOService.DB_IO))
+            this.employeePayrollList = EmployeePayrollDBService.getInstance().readData();
+        return  this.employeePayrollList;
+    }
+
+    public void updateEmployeeSalary(String name, double basic_pay) {
+        int result = EmployeePayrollDBService.getInstance().updateEmployeeData(name,basic_pay);
+        if(result == 0) return;
+        EmployeePayrollData employeePayrollData = this.getEmloyeePayrollData(name);
+        if(employeePayrollData != null) employeePayrollData.basic_pay = basic_pay;
+    }
+
+    public boolean checkEmployeepayrollInSyncWithDB(String name) {
+        List<EmployeePayrollData> employeePayrollDataList = EmployeePayrollDBService.getInstance().getEmployeePayrollData(name);
+        return employeePayrollDataList.get(0).equals(getEmloyeePayrollData(name));
+    }
+
+
+    private EmployeePayrollData getEmloyeePayrollData(String name) {
+        return employeePayrollList.stream()
+                .filter(employeePayrollDataItem -> employeePayrollDataItem.name.equals(name) )
+                .findFirst()
+                .orElse(null);
+        }
+
+
+        public void printData(IOService ioService) {
         if(ioService.equals(IOService.FILE_IO))
             new EmployeePayrollFileIOService().printData();
-
     }
 
     public long countEntries(IOService ioService) {
@@ -60,10 +90,6 @@ public class EmployeePayrollService {
         return 0;
     }
 
-    public List<EmployeePayrollData> readEmployeePayRollData1(IOService ioService){
-        if(ioService.equals(IOService.DB_IO))
-            this.employeePayrollList = new EmployeePayrollDBService().readData();
-        return  this.employeePayrollList;
-    }
+
 }
 
