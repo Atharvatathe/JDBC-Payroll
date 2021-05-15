@@ -76,4 +76,14 @@ public class EmployeePayRollServiceTest {
         Assertions.assertTrue(check);
     }
 
+    //UC4
+    @Test
+    public void givenNewSalaryForEmployee_WhenUpdate_ShouldSyncwithDBUsingPreparedStatement() {
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+        List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayRollData1(EmployeePayrollService.IOService.DB_IO);
+        employeePayrollService.updateEmployeeSalary("Terisa", 3000000.00);
+        boolean check = employeePayrollService.checkEmployeepayrollInSyncWithDB("Terisa");
+        Assertions.assertTrue(check);
+    }
+
 }
