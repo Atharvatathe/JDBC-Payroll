@@ -8,7 +8,6 @@ import java.util.Scanner;
 
 public class EmployeePayrollService {
 
-
     public enum IOService{CONSOLE_IO,FILE_IO,DB_IO,REST_IO}
 
     private List<EmployeePayrollData> employeePayrollList;
@@ -54,6 +53,10 @@ public class EmployeePayrollService {
         else if(ioService.equals(IOService.FILE_IO))
             new EmployeePayrollFileIOService().writeData(employeePayrollList);
 
+    }
+
+    public void addEmployeeToPayroll(String name, double basic_pay, LocalDate startDate, String gender) {
+        employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name,basic_pay,startDate,gender));
     }
 
     public List<EmployeePayrollData> readEmployeePayRollData1(IOService ioService){

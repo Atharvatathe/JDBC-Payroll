@@ -20,7 +20,7 @@ public class EmployeePayrollData {
 
 
     public  String toString(){
-        return "EmployeePayRollData[id=" + id + ",name=" + name + ",salary=" + basic_pay + "]";
+        return "EmployeePayRollData[id=" + id + ",name=" + name + ",basic_pay=" + basic_pay + "]";
     }
 
     @Override

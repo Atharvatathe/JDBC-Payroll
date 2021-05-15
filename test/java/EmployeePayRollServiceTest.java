@@ -109,4 +109,14 @@ public class EmployeePayRollServiceTest {
                                 avgSalaryByGender.get("F").equals(3000000.00));
 
     }
+
+    //UC7
+    @Test
+    public void givenNewEmployee_WhenAddShouldSyncWithdb(){
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+        employeePayrollService.readEmployeePayRollData1(EmployeePayrollService.IOService.DB_IO);
+        employeePayrollService.addEmployeeToPayroll("Mark",5000000.00,LocalDate.now(),"M");
+        boolean result = employeePayrollService.checkEmployeepayrollInSyncWithDB("Mark");
+        Assertions.assertTrue(result);
+    }
 }
