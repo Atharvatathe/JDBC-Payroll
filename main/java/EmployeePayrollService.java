@@ -1,10 +1,12 @@
 import jdk.dynalink.linker.LinkerServices;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class EmployeePayrollService {
+
     public enum IOService{CONSOLE_IO,FILE_IO,DB_IO,REST_IO}
 
     private List<EmployeePayrollData> employeePayrollList;
@@ -64,6 +66,13 @@ public class EmployeePayrollService {
         EmployeePayrollData employeePayrollData = this.getEmloyeePayrollData(name);
         if(employeePayrollData != null) employeePayrollData.basic_pay = basic_pay;
     }
+
+    public List<EmployeePayrollData> readEmployeePayRollForDateRange(IOService ioService, LocalDate startDate, LocalDate endDate) {
+        if(ioService.equals(IOService.DB_IO))
+            return employeePayrollDBService.getEmployeePayrollForDateRange(startDate,endDate);
+        return null;
+    }
+
 
     public boolean checkEmployeepayrollInSyncWithDB(String name) {
         List<EmployeePayrollData> employeePayrollDataList = EmployeePayrollDBService.getInstance().getEmployeePayrollData(name);
