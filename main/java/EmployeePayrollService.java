@@ -55,9 +55,14 @@ public class EmployeePayrollService {
 
     }
 
+    public void addEmployeeToPayrollUC7(String name, double basic_pay, LocalDate startDate, String gender) {
+        employeePayrollList.add(employeePayrollDBService.addEmployeeToPayrollUC7(name,basic_pay,startDate,gender));
+    }
+
     public void addEmployeeToPayroll(String name, double basic_pay, LocalDate startDate, String gender) {
         employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name,basic_pay,startDate,gender));
     }
+
 
     public List<EmployeePayrollData> readEmployeePayRollData1(IOService ioService){
         if(ioService.equals(IOService.DB_IO))

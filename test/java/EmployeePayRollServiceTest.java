@@ -115,6 +115,16 @@ public class EmployeePayRollServiceTest {
     public void givenNewEmployee_WhenAddShouldSyncWithdb(){
         EmployeePayrollService employeePayrollService = new EmployeePayrollService();
         employeePayrollService.readEmployeePayRollData1(EmployeePayrollService.IOService.DB_IO);
+        employeePayrollService.addEmployeeToPayrollUC7("Mark",5000000.00,LocalDate.now(),"M");
+        boolean result = employeePayrollService.checkEmployeepayrollInSyncWithDB("Mark");
+        Assertions.assertTrue(result);
+    }
+
+    //UC8
+    @Test
+    public void givenNewEmployee_WhenAddShouldSyncWithdbUC8(){
+        EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+        employeePayrollService.readEmployeePayRollData1(EmployeePayrollService.IOService.DB_IO);
         employeePayrollService.addEmployeeToPayroll("Mark",5000000.00,LocalDate.now(),"M");
         boolean result = employeePayrollService.checkEmployeepayrollInSyncWithDB("Mark");
         Assertions.assertTrue(result);

@@ -128,7 +128,7 @@ public class EmployeePayrollDBService {
         return genderAvgSalaryMap;
     }
 
-    public EmployeePayrollData addEmployeeToPayroll(String name, double basic_pay, LocalDate startDate, String gender) {
+    public EmployeePayrollData addEmployeeToPayrollUC7(String name, double basic_pay, LocalDate startDate, String gender) {
         int employeeId = -1;
         EmployeePayrollData employeePayrollData = null;
         String sql = String.format("INSERT INTO employee_payroll (name,gender,basic_pay,start)" +
@@ -146,4 +146,46 @@ public class EmployeePayrollDBService {
         }
         return employeePayrollData;
     }
-}
+
+    public EmployeePayrollData addEmployeeToPayroll(String name, double basic_pay, LocalDate startDate,
+                                                    String gender) {
+        int employeeId = -1;
+        Connection connection = null;
+        EmployeePayrollData employeePayrollData = null;
+        try {
+            connection = this.getConnection();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try (Statement statement = connection.createStatement()) {
+            String sql = String.format("INSERT INTO employee_payroll (name,gender,basic_pay,start)" +
+                    "VALUES('%s','%s','%s','%s')", name, gender, basic_pay, Date.valueOf(startDate));
+            int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
+            if (rowAffected == 1) {
+                ResultSet resultSet = statement.getGeneratedKeys();
+                if (resultSet.next()) employeeId = resultSet.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try (Statement statement = connection.createStatement()) {
+            double deduction = basic_pay * 0.2;
+            double taxablepay = basic_pay - deduction;
+            double tax = taxablepay * 0.1;
+            double netPay = basic_pay - tax;
+            String sql = String.format("INSERT INTO payroll_details (employeeID, basic_pay,deduction,taxablepay,tax,netPay)" +
+                    "VALUES ('%s','%s','%s','%s','%s','%s')", employeeId, basic_pay, deduction, taxablepay, tax, netPay);
+            int rowAffected = statement.executeUpdate(sql);
+            if (rowAffected == 1) {
+                employeePayrollData = new EmployeePayrollData(employeeId, name, basic_pay, startDate);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return employeePayrollData;
+    }
+
+    }
